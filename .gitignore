@@ -1,0 +1,4 @@
+node_modules/
+.env
+figma.json
+package-lock.json
