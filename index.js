@@ -60,7 +60,11 @@ const getDocStyles = async doc => {
   const { styles, components, document } = doc
   DEBUG && console.log('styles', styles)
 
+  const { name, lastModified, version } = doc
   const styleMap = {
+    name,
+    lastModified,
+    version,
     fills: {},
     strokes: {},
     effects: {},
@@ -78,6 +82,8 @@ const getDocStyles = async doc => {
       DEBUG && console.log('style', type, key)
       if (styleMap[type][key]) {
         styleMap[type][key] = Object.assign(styleMap[type][key], style)
+      } else {
+        DEBUG && console.log('missing style', type, style)
       }
     })
 

@@ -5,6 +5,21 @@ A small utility to download a Figma doc from the API and sort out all "Local sty
 Currently supports text, fill, stroke, grid and effect styles.
 
 ## Example
+1. get the Figma file ID
+https://www.figma.com/file/<FILE_ID>/....
+(between the slashes)
+
+2. get your Figma API key:
+go to your file and create a new token in the
+Personal Access Tokens section
+
+3. set environment variables>:
+
+`export FILE_ID=...your file id`
+and
+`export API_KEY=...your figma token`
+
+run the example:
 
 ```js
 const { downloadDoc, getDocStyles } = require('get-figma-styles')
