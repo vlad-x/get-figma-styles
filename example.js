@@ -1,14 +1,18 @@
-const { downloadDoc, getDocStyles } = require('./index')
+const { 
+  downloadDoc,
+  getTeamStyles, 
+  getDocStyles 
+} = require('./index')
 const fs = require('fs')
 
-const { FILE_ID, API_KEY } = process.env
+const { FILE_ID, API_KEY, TEAM_ID } = process.env
 
 const example = async () => {
   const doc = await downloadDoc(API_KEY, FILE_ID)
-  // fs.writeFileSync('figma.json', JSON.stringify(doc, 0, 2))
+  fs.writeFileSync('figma.json', JSON.stringify(doc, 0, 2))
   // const doc = JSON.parse(fs.readFileSync('figma.json', 'utf-8'))
 
-  const styles = await getDocStyles(doc)
+  const styles = await getDocStyles(doc, await getTeamStyles(API_KEY, TEAM_ID))
   console.log('styles', styles)
 }
 

@@ -3,7 +3,7 @@
   "repository": {
     "url": "https://github.com/vlad-x/get-figma-styles"
   },
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "A small utility to download a Figma doc from the API and sort out all Local styles into a single object.",
   "main": "index.js",
   "scripts": {

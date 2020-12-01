@@ -1,4 +1,3 @@
-const fs = require('fs')
 const fetch = require('node-fetch')
 
 const { DEBUG } = process.env
@@ -10,16 +9,27 @@ const types = {
   GRID: 1
 }
 
-const downloadDoc = async (apiKey, id) => {
+const request = async (apiKey, path) => {
   const params = {
     headers: { 'X-FIGMA-TOKEN': apiKey }
   }
-  const url = `https://api.figma.com/v1/files/${id}?geometry=paths`
-  console.log('Downloading figma doc', id)
+  const url = `https://api.figma.com/${path}`
+  console.log('GET', url)
   const res = await fetch(url, params)
   const obj = await res.json()
-
   return obj
+}
+
+const downloadDoc = async (apiKey, id) => {
+  console.log('Downloading figma doc', id)
+  return request(apiKey, `v1/files/${id}?geometry=paths`)
+}
+
+const getMe = async (apiKey) => {
+  return request(apiKey, `v1/me`)
+}
+const getTeamStyles = async (apiKey, teamId) => {
+  return (await request(apiKey, `v1/teams/${teamId}/styles`)).meta.styles
 }
 
 const pluralize = str =>
@@ -39,10 +49,13 @@ const getSafeProp = (prop) =>
     ? prop[0]
     : prop
 
-const iterateDoc = (item, map) => {
+const iterateDoc = (item, map, pageName) => {
   if (!item) return
 
   const styles = item.styles || {}
+  if (item.type === 'CANVAS') {
+    pageName = item.name
+  }
 
   Object.keys(styles).map(type => {
     const pluralType = pluralize(type)
@@ -51,14 +64,18 @@ const iterateDoc = (item, map) => {
 
     DEBUG && console.log('styles types', type, styles[type], propType, item[propType])
     map[pluralType][styleId] = getSafeProp(item[propType])
+    if (pageName) {
+      map[pluralType][styleId].page = pageName
+    }
   })
 
-  return (item.children || []).map(item => iterateDoc(item, map))
+  return (item.children || []).map(item => iterateDoc(item, map, pageName))
 }
 
-const getDocStyles = async doc => {
+const getDocStyles = async (doc, teamStyles) => {
   const { styles, components, document } = doc
   DEBUG && console.log('styles', styles)
+  console.log('teamStyles', teamStyles)
 
   const { name, lastModified, version } = doc
   const styleMap = {
@@ -79,7 +96,15 @@ const getDocStyles = async doc => {
       const style = styles[key]
       // console.log('STYLE', style.styleType, style)
       const type = pluralize(style.styleType.toLowerCase())
-      DEBUG && console.log('style', type, key)
+      // DEBUG && 
+      console.log('style', type, key)
+
+      if (teamStyles) {
+        const meta = teamStyles.filter(s => s.key === style.key).pop()
+        if (meta) {
+          style.meta = meta
+        }
+      }
       if (styleMap[type][key]) {
         styleMap[type][key] = Object.assign(styleMap[type][key], style)
       } else {
@@ -92,5 +117,7 @@ const getDocStyles = async doc => {
 
 module.exports = {
   downloadDoc,
+  getMe,
+  getTeamStyles,
   getDocStyles
 }
