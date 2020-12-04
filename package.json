@@ -6,6 +6,7 @@
   "version": "0.0.5",
   "description": "A small utility to download a Figma doc from the API and sort out all Local styles into a single object.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "standard --fix"
   },
