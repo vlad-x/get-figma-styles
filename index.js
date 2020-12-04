@@ -28,7 +28,7 @@ const downloadDoc = async (apiKey, id, query = {}) => {
 }
 
 const getMe = async (apiKey) => {
-  return request(apiKey, `v1/me`)
+  return request(apiKey, 'v1/me')
 }
 
 const getTeamStyles = async (apiKey, teamId, query) => {
@@ -76,9 +76,8 @@ const iterateDoc = (item, map, pageName) => {
 }
 
 const getDocStyles = async (doc, teamStyles) => {
-  const { styles, components, document } = doc
-  DEBUG && console.log('styles', styles)
-  console.log('teamStyles', teamStyles)
+  const { styles, document } = doc
+  DEBUG && console.log('styles', styles, 'teamStyles', teamStyles)
 
   const { name, lastModified, version } = doc
   const styleMap = {
@@ -97,10 +96,9 @@ const getDocStyles = async (doc, teamStyles) => {
   Object.keys(styles)
     .map(key => {
       const style = styles[key]
-      // console.log('STYLE', style.styleType, style)
+      
       const type = pluralize(style.styleType.toLowerCase())
-      // DEBUG && 
-      console.log('style', type, key)
+      DEBUG && console.log('style', type, key)
 
       if (teamStyles) {
         const meta = teamStyles.filter(s => s.key === style.key).pop()

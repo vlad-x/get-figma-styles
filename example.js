@@ -1,7 +1,7 @@
-const { 
+const {
   downloadDoc,
-  getTeamStyles, 
-  getDocStyles 
+  getTeamStyles,
+  getDocStyles
 } = require('./index')
 const fs = require('fs')
 
@@ -16,10 +16,9 @@ const example = async () => {
   console.log('styles', arrangeByPages(styles))
 }
 
-
 const arrangeByPages = doc => {
   const pages = {}
-  const {     
+  const {
     name,
     lastModified,
     version,
@@ -37,7 +36,7 @@ const arrangeByPages = doc => {
   return {
     name,
     lastModified,
-    version,    
+    version,
     pages
   }
 }
