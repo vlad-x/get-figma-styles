@@ -1,4 +1,5 @@
 const fetch = require('node-fetch')
+const qs = require('qs')
 
 const { DEBUG } = process.env
 
@@ -9,27 +10,29 @@ const types = {
   GRID: 1
 }
 
-const request = async (apiKey, path) => {
-  const params = {
+const request = async (apiKey, path, query) => {
+  const opts = {
     headers: { 'X-FIGMA-TOKEN': apiKey }
   }
-  const url = `https://api.figma.com/${path}`
+  const params = query ? qs.stringify(query) : ''
+  const url = `https://api.figma.com/${path}?${params}`
   console.log('GET', url)
-  const res = await fetch(url, params)
+  const res = await fetch(url, opts)
   const obj = await res.json()
   return obj
 }
 
-const downloadDoc = async (apiKey, id) => {
+const downloadDoc = async (apiKey, id, query = {}) => {
   console.log('Downloading figma doc', id)
-  return request(apiKey, `v1/files/${id}?geometry=paths`)
+  return request(apiKey, `v1/files/${id}`, { ...query, geometry: 'paths' })
 }
 
 const getMe = async (apiKey) => {
   return request(apiKey, `v1/me`)
 }
-const getTeamStyles = async (apiKey, teamId) => {
-  return (await request(apiKey, `v1/teams/${teamId}/styles`)).meta.styles
+
+const getTeamStyles = async (apiKey, teamId, query) => {
+  return (await request(apiKey, `v1/teams/${teamId}/styles`, query)).meta.styles
 }
 
 const pluralize = str =>
