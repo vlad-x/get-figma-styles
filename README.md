@@ -47,3 +47,7 @@ const example = async () => {
 
 example().catch(err => console.error(err))
 ```
+
+# Contributors
+[![Geopic](https://avatars0.githubusercontent.com/u/29524044?s=32&u=bae6d7c1bf20e6fcd6d0e0e6d9ebab7e1fe5749d&v=4)](https://github.com/geopic) Geopic - TypeScript definitions
+
