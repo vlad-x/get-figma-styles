@@ -10,7 +10,7 @@ https://www.figma.com/file/<FILE_ID>/....
 (between the slashes)
 
 2. get your Figma API key:
-go to your file and create a new token in the
+go to your profile and create a new token in the
 Personal Access Tokens section
 
 3. set environment variables>:
